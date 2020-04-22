@@ -4,6 +4,7 @@ using System.Data.SQLite;
 
 class Database
 {
+    //All database code here
     public void initialize()
     {
         string dbFile = Directory.GetCurrentDirectory() + "/database.db";

@@ -6,5 +6,7 @@ class Program
     {
         Database db = new Database();
         db.initialize();
+        Terminal t = new Terminal();
+        t.run();
     }
 }
