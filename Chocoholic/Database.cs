@@ -30,7 +30,7 @@ public class Database
     }
 
     //create new member or provider
-    public void createActor(ActorType type, string name, string address, string city, string state, int zipcode, int status = 1)
+    public void createActor(ActorType type, string name, string address, string city, string state, int zipcode, int balance = 100, int status = 1)
     {
         //This method can only be used with member and provider types
         Debug.Assert(type == ActorType.Member || type == ActorType.Provider);
@@ -42,7 +42,7 @@ public class Database
 
         if (type == ActorType.Member)
         {
-            cmd.CommandText = @"INSERT INTO Members(name, status, address, city, state, zipcode) VALUES ('" + name + "', " + status + ", '"
+            cmd.CommandText = @"INSERT INTO Members(name, balance, status, address, city, state, zipcode) VALUES ('" + name + "', " + balance + ", " + status + ", '"
                 + address + "', '" + city + "', '" + state + "', " + zipcode + ");";
             cmd.ExecuteNonQuery();
 
@@ -245,6 +245,20 @@ public class Database
         con.Close();
     }
 
+    public void updateBalance(ActorType type, uint id, int balance)
+    {
+        if (type != ActorType.Member) return; //nothing to update
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        cmd.CommandText = @"UPDATE Members SET balance = " + balance + " WHERE id = " + id;
+        cmd.ExecuteNonQuery();
+
+        con.Close();
+    }
+
 
     private void createDatabase()
     {
@@ -259,7 +273,7 @@ public class Database
                     name TEXT, address TEXT, city TEXT, state TEXT, zipcode INTEGER)";
         cmd.ExecuteNonQuery();
         cmd.CommandText = @"CREATE TABLE Members(id INTEGER PRIMARY KEY,
-                    name TEXT, status INTEGER, address TEXT, city TEXT, state TEXT, zipcode INTEGER)";
+                    name TEXT, balance INTEGER, status INTEGER, address TEXT, city TEXT, state TEXT, zipcode INTEGER)";
         cmd.ExecuteNonQuery();
         cmd.CommandText = @"CREATE TABLE Operators(id INTEGER PRIMARY KEY)";
         cmd.ExecuteNonQuery();
