@@ -7,14 +7,13 @@ public class Terminal
     }
 
 
-    public void run()
+    public void run(Database db)
     {
         while (true)
         {
             //feel free to change this, just placeholder
             Console.WriteLine("Please Enter a Command");
             string command = Console.ReadLine();
-
             if (command.ToLower() == "exit") break;
         }
     }
