@@ -42,8 +42,8 @@ public class Database
 
         if (type == ActorType.Member)
         {
-            cmd.CommandText = @"INSERT INTO Members(name, status, address, city, state, zipcode) VALUES (" + name + ", " + status + ", "
-                + address + ", " + city + ", " + state + ", " + zipcode;
+            cmd.CommandText = @"INSERT INTO Members(name, status, address, city, state, zipcode) VALUES ('" + name + "', " + status + ", '"
+                + address + "', '" + city + "', '" + state + "', " + zipcode + ");";
             cmd.ExecuteNonQuery();
 
             cmd.CommandText = @"SELECT id FROM Members ORDER BY id DESC LIMIT 1;";
@@ -58,8 +58,8 @@ public class Database
         }
         else if (type == ActorType.Provider)
         {
-            cmd.CommandText = @"INSERT INTO Providers(name, address, city, state, zipcode) VALUES (" + name + ", "
-                + address + ", " + city + ", " + state + ", " + zipcode;
+            cmd.CommandText = @"INSERT INTO Providers(name, address, city, state, zipcode) VALUES ('" + name + "', '"
+                + address + "', '" + city + "', '" + state + "', " + zipcode + ");";
             cmd.ExecuteNonQuery();
 
             cmd.CommandText = @"SELECT id FROM Providers ORDER BY id DESC LIMIT 1;";
@@ -121,6 +121,130 @@ public class Database
         con.Close();
     }
 
+    public void updateName(ActorType type, uint id, string name)
+    {
+        if (type != ActorType.Member && type != ActorType.Provider) return; //nothing to update
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        if (type == ActorType.Member)
+        {
+            cmd.CommandText = @"UPDATE Members SET name = '" + name + "' WHERE id = " + id;
+            cmd.ExecuteNonQuery();
+        }
+        else if (type == ActorType.Provider)
+        {
+            cmd.CommandText = @"UPDATE Providers SET name = '" + name + "' WHERE id = " + id;
+            cmd.ExecuteNonQuery();
+        }
+
+        con.Close();
+    }
+
+    public void updateAddress(ActorType type, uint id, string address)
+    {
+        if (type != ActorType.Member && type != ActorType.Provider) return; //nothing to update
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        if (type == ActorType.Member)
+        {
+            cmd.CommandText = @"UPDATE Members SET address = '" + address + "' WHERE id = " + id;
+            cmd.ExecuteNonQuery();
+        }
+        else if (type == ActorType.Provider)
+        {
+            cmd.CommandText = @"UPDATE Providers SET address = '" + address + "' WHERE id = " + id;
+            cmd.ExecuteNonQuery();
+        }
+
+        con.Close();
+    }
+
+    public void updateCity(ActorType type, uint id, string city)
+    {
+        if (type != ActorType.Member && type != ActorType.Provider) return; //nothing to update
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        if (type == ActorType.Member)
+        {
+            cmd.CommandText = @"UPDATE Members SET city = '" + city + "' WHERE id = " + id;
+            cmd.ExecuteNonQuery();
+        }
+        else if (type == ActorType.Provider)
+        {
+            cmd.CommandText = @"UPDATE Providers SET city = '" + city + "' WHERE id = " + id;
+            cmd.ExecuteNonQuery();
+        }
+
+        con.Close();
+    }
+
+    public void updateState(ActorType type, uint id, string state)
+    {
+        if (type != ActorType.Member && type != ActorType.Provider) return; //nothing to update
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        if (type == ActorType.Member)
+        {
+            cmd.CommandText = @"UPDATE Members SET state = '" + state + "' WHERE id = " + id;
+            cmd.ExecuteNonQuery();
+        }
+        else if (type == ActorType.Provider)
+        {
+            cmd.CommandText = @"UPDATE Providers SET state = '" + state + "' WHERE id = " + id;
+            cmd.ExecuteNonQuery();
+        }
+
+        con.Close();
+    }
+
+    public void updateZipcode(ActorType type, uint id, int zipcode)
+    {
+        if (type != ActorType.Member && type != ActorType.Provider) return; //nothing to update
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        if (type == ActorType.Member)
+        {
+            cmd.CommandText = @"UPDATE Members SET zipcode = " + zipcode + " WHERE id = " + id;
+            cmd.ExecuteNonQuery();
+        }
+        else if (type == ActorType.Provider)
+        {
+            cmd.CommandText = @"UPDATE Providers SET address = " + zipcode + " WHERE id = " + id;
+            cmd.ExecuteNonQuery();
+        }
+
+        con.Close();
+    }
+
+    public void updateStatus(ActorType type, uint id, int status)
+    {
+        if (type != ActorType.Member) return; //nothing to update
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        cmd.CommandText = @"UPDATE Members SET status = " + status + " WHERE id = " + id;
+        cmd.ExecuteNonQuery();
+
+        con.Close();
+    }
+
 
     private void createDatabase()
     {
@@ -142,5 +266,8 @@ public class Database
         cmd.CommandText = @"CREATE TABLE Managers(id INTEGER PRIMARY KEY)";
         cmd.ExecuteNonQuery();
         con.Close();
+
+        Console.WriteLine("Database Creation Complete");
+        createActor(ActorType.Operator);
     }
 }
