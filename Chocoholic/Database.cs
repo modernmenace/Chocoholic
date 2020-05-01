@@ -12,7 +12,8 @@ public class Database
         Member,
         Provider,
         Manager,
-        Operator
+        Operator,
+        None
     }
 
 
