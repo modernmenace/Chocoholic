@@ -24,7 +24,7 @@ public class Database
             createDatabase();
         else
         {
-            string cs = @"URI=" + db_file;
+            string cs = @"Data Source=" + db_file;
             using var con = new SQLiteConnection(cs);
             con.Open();
         }
@@ -264,7 +264,7 @@ public class Database
     private void createDatabase()
     {
         //Database doesnt exist yet; set up tables etc.
-        string cs = @"URI=" + db_file;
+        string cs = @"Data Source=" + db_file;
         using var con = new SQLiteConnection(cs);
         con.Open();
 
