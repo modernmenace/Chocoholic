@@ -73,7 +73,6 @@ public class Terminal
         }
     }
 
-    //TODO: Implement Operator Functionality
     private void operatorTerminal(uint id)
     {
         while (true)
@@ -225,9 +224,11 @@ public class Terminal
                     string newFieldValue = "";
                     for(int i = 4; i < commandArray.Length; i++)
                     {
-                        newFieldValue.Insert(newFieldValue.Length, commandArray[i]);
-                        newFieldValue.Insert(newFieldValue.Length, " ");
+                        Console.WriteLine(i);
+                        newFieldValue += commandArray[i];
+                        newFieldValue += ' ';
                     }
+                    Console.WriteLine(newFieldValue);
 
                     //update string fields
                     if (commandArray[3].ToLower() == "name")    database.updateName(Database.ActorType.Member, mId, newFieldValue);
@@ -358,6 +359,7 @@ public class Terminal
     }
 
     //TODO: Implement Manager Functionality
+    //getServiceReport function available in database
     private void managerTerminal(uint id)
     {
         while (true)

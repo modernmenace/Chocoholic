@@ -2,6 +2,7 @@
 using System.IO;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 public class Database
 {
@@ -83,6 +84,30 @@ public class Database
         }
 
         con.Close();
+    }
+
+    //get service report, separated by field
+    public string getServiceReport(uint id)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        string report = "";
+
+        cmd.CommandText = @"Select * FROM Reports WHERE id = " + id;
+        cmd.ExecuteNonQuery();
+
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+            report += rdr.GetString(0);
+        }
+
+        con.Close();
+        return report;
     }
 
     //get Member Balance
