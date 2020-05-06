@@ -58,7 +58,7 @@ public class Terminal
     }
 
     //TODO: Implement Provider Functionality
-    //createServiceReport function available in database
+    //createServiceReport, getMemberBalance functions available in database
     private void providerTerminal(uint id)
     {
         while (true)

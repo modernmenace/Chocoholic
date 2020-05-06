@@ -85,6 +85,28 @@ public class Database
         con.Close();
     }
 
+    //get Member Balance
+    public int getMemberBalance(uint id)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        cmd.CommandText = @"SELECT balance FROM Members WHERE id = " + id;
+        cmd.ExecuteNonQuery();
+
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+            con.Close();
+            return rdr.GetInt32(0);
+        }
+        con.Close();
+        return -1;
+    }
+
     //delete actor
     public void deleteActor(ActorType type, uint id)
     {
