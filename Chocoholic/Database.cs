@@ -50,9 +50,39 @@ public class Database
 
         using SQLiteDataReader rdr = cmd.ExecuteReader();
         while (rdr.Read())
+        {
+            con.Close();
             return true;
-
+        }
+        con.Close();
         return false;
+    }
+
+    //create service report
+    public void createServiceReport(uint memberID, uint providerID, string serviceDate, int fee)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        string reportDate = DateTime.Now.ToString("M/d/yyyy");
+
+        cmd.CommandText = @"INSERT INTO Reports(provider, member, fee, serviceDate, reportDate) VALUES (" + providerID + ", " + memberID
+            + ", " + fee + ", '" + serviceDate + "', '" + reportDate + "'";
+        cmd.ExecuteNonQuery();
+
+        cmd.CommandText = @"SELECT id FROM Reports ORDER BY id DESC LIMIT 1;";
+        cmd.ExecuteNonQuery();
+
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+            Console.WriteLine("Report created with id '" + $"{rdr.GetInt32(0)}" + "'!");
+        }
+
+        con.Close();
     }
 
     //delete actor
@@ -72,6 +102,8 @@ public class Database
 
         cmd.CommandText = @"DELETE FROM " + table + " WHERE id = " + id;
         cmd.ExecuteNonQuery();
+
+        con.Close();
     }
 
     //create new member or provider
@@ -324,6 +356,9 @@ public class Database
         cmd.ExecuteNonQuery();
         cmd.CommandText = @"CREATE TABLE Managers(id INTEGER PRIMARY KEY)";
         cmd.ExecuteNonQuery();
+        cmd.CommandText = @"CREATE TABLE Reports(id INTEGER PRIMARY KEY, provider INTEGER, member INTEGER, fee INTEGER, serviceDate TEXT, reportDate TEXT";
+        cmd.ExecuteNonQuery();
+
         con.Close();
 
         Console.WriteLine("Database Creation Complete");
