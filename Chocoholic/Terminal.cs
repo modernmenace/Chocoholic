@@ -195,6 +195,158 @@ public class Terminal
                 }
             }
 
+            //update command
+            if (commandArray[0].ToLower() == "update")
+            {
+                if (commandArray.Length < 3)
+                {
+                    Console.WriteLine("Invalid Syntax\nProper Usage: update (member/provider) ('id') (name/address/city/state/zipcode/status/balance) ('new field value')");
+                    continue;
+                }
+
+                if (commandArray[1].ToLower() == "member")
+                {
+                    //verify ID
+                    uint mId = 0;
+                    try { mId = UInt32.Parse(commandArray[2]); }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Invalid Member ID '" + commandArray[2] + "'!");
+                        continue;
+                    }
+                    if (!database.actorExists(mId, Database.ActorType.Member))
+                    {
+                        Console.WriteLine("Invalid Member ID '" + commandArray[2] + "'!");
+                        continue;
+                    }
+
+                    //build new field value string
+                    string newFieldValue = "";
+                    for(int i = 4; i < commandArray.Length; i++)
+                    {
+                        newFieldValue.Insert(newFieldValue.Length, commandArray[i]);
+                        newFieldValue.Insert(newFieldValue.Length, " ");
+                    }
+
+                    //update string fields
+                    if (commandArray[3].ToLower() == "name")    database.updateName(Database.ActorType.Member, mId, newFieldValue);
+                    else if (commandArray[3].ToLower() == "address") database.updateAddress(Database.ActorType.Member, mId, newFieldValue);
+                    else if (commandArray[3].ToLower() == "city")    database.updateCity(Database.ActorType.Member, mId, newFieldValue);
+                    else if (commandArray[3].ToLower() == "state")   database.updateState(Database.ActorType.Member, mId, newFieldValue);
+                    else if (commandArray[3].ToLower() == "zipcode")
+                    {
+                        int newInt = 0;
+                        try { Int32.Parse(commandArray[4]); }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("New integer value for field '" + commandArray[3].ToLower() + "' is not an integer");
+                            continue;
+                        }
+                        database.updateZipcode(Database.ActorType.Member, mId, newInt);
+                    }
+                    else if (commandArray[3].ToLower() == "status")
+                    {
+                        int newInt = 0;
+                        try { Int32.Parse(commandArray[4]); }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("New integer value for field '" + commandArray[3].ToLower() + "' is not an integer");
+                            continue;
+                        }
+                        database.updateStatus(Database.ActorType.Member, mId, newInt);
+                    }
+                    else if (commandArray[3].ToLower() == "balance")
+                    {
+                        int newInt = 0;
+                        try { Int32.Parse(commandArray[4]); }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("New integer vaule for field '" + commandArray[3].ToLower() + "' is not an integer");
+                            continue;
+                        }
+                        database.updateBalance(Database.ActorType.Member, mId, newInt);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Field '" + commandArray[3] + "' not found!\nAcceptable Fields: name/address/city/state/zipcode/status/balance");
+                        continue;
+                    }
+                }
+                else if (commandArray[1].ToLower() == "provider")
+                {
+                    //verify ID
+                    uint mId = 0;
+                    try { mId = UInt32.Parse(commandArray[2]); }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Invalid Provider ID '" + commandArray[2] + "'!");
+                        continue;
+                    }
+                    if (!database.actorExists(mId, Database.ActorType.Provider))
+                    {
+                        Console.WriteLine("Invalid Provider ID '" + commandArray[2] + "'!");
+                        continue;
+                    }
+
+                    //build new field value string
+                    string newFieldValue = "";
+                    for (int i = 4; i < commandArray.Length; i++)
+                    {
+                        newFieldValue.Insert(newFieldValue.Length, commandArray[i]);
+                        newFieldValue.Insert(newFieldValue.Length, " ");
+                    }
+
+                    //update string fields
+                    if (commandArray[3].ToLower() == "name") database.updateName(Database.ActorType.Provider, mId, newFieldValue);
+                    else if (commandArray[3].ToLower() == "address") database.updateAddress(Database.ActorType.Provider, mId, newFieldValue);
+                    else if (commandArray[3].ToLower() == "city") database.updateCity(Database.ActorType.Provider, mId, newFieldValue);
+                    else if (commandArray[3].ToLower() == "state") database.updateState(Database.ActorType.Provider, mId, newFieldValue);
+                    else if (commandArray[3].ToLower() == "zipcode")
+                    {
+                        int newInt = 0;
+                        try { Int32.Parse(commandArray[4]); }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("New integer value for field '" + commandArray[3].ToLower() + "' is not an integer");
+                            continue;
+                        }
+                        database.updateZipcode(Database.ActorType.Provider, mId, newInt);
+                    }
+                    else if (commandArray[3].ToLower() == "status")
+                    {
+                        int newInt = 0;
+                        try { Int32.Parse(commandArray[4]); }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("New integer value for field '" + commandArray[3].ToLower() + "' is not an integer");
+                            continue;
+                        }
+                        database.updateStatus(Database.ActorType.Provider, mId, newInt);
+                    }
+                    else if (commandArray[3].ToLower() == "balance")
+                    {
+                        int newInt = 0;
+                        try { Int32.Parse(commandArray[4]); }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("New integer value for field '" + commandArray[3].ToLower() + "' is not an integer");
+                            continue;
+                        }
+                        database.updateBalance(Database.ActorType.Provider, mId, newInt);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Field '" + commandArray[3] + "' not found!\nAcceptable Fields: name/address/city/state/zipcode/status/balance");
+                        continue;
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Syntax\nProper Usage: update (member/provider) (name/address/city/state/zipcode/status/balance)");
+                    continue;
+                }
+            }
 
             //exit command
             if (command.ToLower().Contains("exit"))
