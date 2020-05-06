@@ -136,6 +136,67 @@ public class Terminal
                 }
             }
 
+            //remove command
+            if (commandArray[0].ToLower() == "remove" || commandArray[0].ToLower() == "delete")
+            {
+                if (commandArray.Length < 2)
+                {
+                    Console.WriteLine("Invalid Syntax\nProper Usage: " + commandArray[0] + " (member/provider)");
+                    continue;
+                }
+
+                if (commandArray[1].ToLower() == "member")
+                {
+                    //remove member
+                    Console.WriteLine("Please enter the ID of the member:");
+                    uint mId = 0;
+                    try
+                    {
+                        mId = UInt32.Parse(Console.ReadLine());
+                    } catch (Exception e)
+                    {
+                        Console.WriteLine("ID is not of valid format");
+                        continue;
+                    }
+
+                    if (!database.actorExists(mId, Database.ActorType.Member))
+                    {
+                        Console.WriteLine("Member does not exist with ID '" + mId + "'!");
+                        continue;
+                    }
+                    database.deleteActor(Database.ActorType.Member, mId);
+                }
+                else if (commandArray[1].ToLower() == "provider")
+                {
+                    //remove provider
+                    Console.WriteLine("Please enter the ID of the provider:");
+                    uint mId = 0;
+                    try
+                    {
+                        mId = UInt32.Parse(Console.ReadLine());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("ID is not of valid format");
+                        continue;
+                    }
+
+                    if (!database.actorExists(mId, Database.ActorType.Provider))
+                    {
+                        Console.WriteLine("Provider does not exist with ID '" + mId + "'!");
+                        continue;
+                    }
+                    database.deleteActor(Database.ActorType.Provider, mId);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Syntax\nProper Usage: " + commandArray[0] + " (member/provider)");
+                    continue;
+                }
+            }
+
+
+            //exit command
             if (command.ToLower().Contains("exit"))
             {
                 System.Environment.Exit(0);

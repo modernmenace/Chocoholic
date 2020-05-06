@@ -30,6 +30,50 @@ public class Database
         }
     }
 
+    //check if actor exists with given ID
+    public bool actorExists(uint id, ActorType type = ActorType.Member)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        string table = "Members";
+
+        if      (type == ActorType.Member)   table = "Members";
+        else if (type == ActorType.Provider) table = "Providers";
+        else if (type == ActorType.Manager)  table = "Managers";
+        else if (type == ActorType.Operator) table = "Operators";
+
+        cmd.CommandText = @"SELECT * FROM " + table + " WHERE id = " + id;
+        cmd.ExecuteNonQuery();
+
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+        while (rdr.Read())
+            return true;
+
+        return false;
+    }
+
+    //delete actor
+    public void deleteActor(ActorType type, uint id)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        string table = "Members";
+
+        if (type == ActorType.Member) table = "Members";
+        else if (type == ActorType.Provider) table = "Providers";
+        else if (type == ActorType.Manager) table = "Managers";
+        else if (type == ActorType.Operator) table = "Operators";
+
+        cmd.CommandText = @"DELETE FROM " + table + " WHERE id = " + id;
+        cmd.ExecuteNonQuery();
+    }
+
     //create new member or provider
     public void createActor(ActorType type, string name, string address, string city, string state, int zipcode, int balance = 100, int status = 1)
     {
