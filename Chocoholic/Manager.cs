@@ -36,7 +36,7 @@ public class Manager
                     Console.WriteLine("ID is not of valid format");
                     continue;
                 }
-                string report = database.getServiceReport(mId);
+                var report = database.getServiceReport(mId).Split(',');
                 Console.WriteLine(report);
             }
             else
