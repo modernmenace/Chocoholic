@@ -24,7 +24,7 @@ public class Operator
             {
                 if (commandArray.Length < 2)
                 {
-                    Console.WriteLine("Invalid Syntax\nProper Usage: create (member/provider)");
+                    Console.WriteLine("Invalid Syntax\nProper Usage: create (member/provider/service)");
                     continue;
                 }
                 if (commandArray[1].ToLower() == "member")
@@ -69,9 +69,32 @@ public class Operator
                     }
                     database.createActor(Database.ActorType.Provider, name, address, city, state, zip);
                 }
+                else if (commandArray[1].ToLower() == "service")
+                {
+                    //create service
+                    Console.WriteLine("Please Enter a Name for the Service:");
+                    var name = Console.ReadLine();
+                    Console.WriteLine("Please Enter a Service Code:");
+                    var serviceCode = Console.ReadLine();
+                    Console.WriteLine("Please Enter the ID of the Corresponding Provider:");
+                    var pID = Console.ReadLine();
+                    Console.WriteLine("Please Enter the Fee for the Service:");
+                    var fee = Console.ReadLine();
+
+                    try
+                    {
+                        database.createService(UInt32.Parse(serviceCode), name, UInt32.Parse(pID), Int32.Parse(fee));
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Error: service code, provider ID, or fee is not an integer");
+                        continue;
+                    }
+                }
+
                 else
                 {
-                    Console.WriteLine("Invalid Syntax\nProper Usage: create (member/provider)");
+                    Console.WriteLine("Invalid Syntax\nProper Usage: create (member/provider/service)");
                     continue;
                 }
             }
@@ -81,7 +104,7 @@ public class Operator
             {
                 if (commandArray.Length < 2)
                 {
-                    Console.WriteLine("Invalid Syntax\nProper Usage: " + commandArray[0] + " (member/provider)");
+                    Console.WriteLine("Invalid Syntax\nProper Usage: " + commandArray[0] + " (member/provider/service)");
                     continue;
                 }
 
@@ -129,9 +152,26 @@ public class Operator
                     }
                     database.deleteActor(Database.ActorType.Provider, mId);
                 }
+                else if (commandArray[1].ToLower() == "service")
+                {
+                    //remove service
+                    Console.WriteLine("Please enter the service code:");
+                    uint mId = 0;
+                    try
+                    {
+                        mId = UInt32.Parse(Console.ReadLine());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("service code is not of valid format");
+                        continue;
+                    }
+
+                    database.deleteService(mId);
+                }
                 else
                 {
-                    Console.WriteLine("Invalid Syntax\nProper Usage: " + commandArray[0] + " (member/provider)");
+                    Console.WriteLine("Invalid Syntax\nProper Usage: " + commandArray[0] + " (member/provider/service)");
                     continue;
                 }
             }

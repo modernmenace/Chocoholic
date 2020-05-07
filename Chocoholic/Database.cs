@@ -348,6 +348,20 @@ public class Database
         con.Close();
     }
 
+    //delete service
+    public void deleteService(uint serviceCode)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        cmd.CommandText = @"DELETE FROM Services WHERE code = " + serviceCode;
+        cmd.ExecuteNonQuery();
+
+        con.Close();
+    }
+
     //create new member or provider
     public void createActor(ActorType type, string name, string address, string city, string state, int zipcode, int balance = 100, int status = 1)
     {
