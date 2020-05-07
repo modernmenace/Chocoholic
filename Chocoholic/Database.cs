@@ -193,8 +193,15 @@ public class Database
 
         for (int i = 1; i < rdr.FieldCount; i++)
         {
-            report += rdr.GetValue(i);
-            report += ",";
+            try
+            {
+                report += rdr.GetValue(i);
+                report += ",";
+            } catch (Exception e)
+            {
+                con.Close();
+                return "";
+            }
         }
 
         con.Close();
