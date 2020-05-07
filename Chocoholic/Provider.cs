@@ -16,6 +16,7 @@ public class Provider
     {
         while (true)
         {
+            T_LOOP:
             Console.WriteLine("--Provider Terminal--");
             string command = Console.ReadLine();
             var commandArray = command.Split(' ');
@@ -84,18 +85,37 @@ public class Provider
                 if(commandArray.Length<3)
                     commandArray.Append("");
 
-                //validate member handles all IO
-                string memberInfo = findMemberInfo(commandArray[1].ToLower());
-                //do more here
-
+                //find member handles all IO
+                string[] memberInfo = findMemberInfo(commandArray[1].ToLower());
+                //order of return: name, balance, status, address, city, state, zipcode
+                if(memberInfo[0] != "")
+                    Console.WriteLine("Member " + memberInfo[0] + " Validated");
+                else
+                {
+                    Console.WriteLine("Member not validated");
+                    continue;
+                }
+                
                 //provider enters date of service (no validation)
                 Console.WriteLine("Enter date of service: ");
                 string serviceDate = Console.ReadLine();
 
                 //provider looks up service for coorisponding service code
-
-
-                //provider confirms service and adds comments
+                string[] serviceInfo;
+                while(true)
+                {
+                    Console.WriteLine("Enter service keyword: ");
+                    string inputKey = Console.ReadLine();
+                    if(inputKey == "quit" || inputKey == "exit")
+                        goto T_LOOP; //continue back to main terminal loop
+                    serviceInfo = findServiceInfo(inputKey);
+                    if(serviceInfo[0] != "")
+                    {
+                        //provider confirms service and adds comments
+                    }
+                }
+                
+                
                 //provider sends request to database to be logged
                 //provider is shown a copy of the data to be saved locally for verification purposes
             }
