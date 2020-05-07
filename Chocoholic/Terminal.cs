@@ -6,8 +6,6 @@ public class Terminal
 
     public void run(Database db)
     {
-        //feel free to change this, just placeholder
-
         //get terminal mode
         this.database = db;
         Database.ActorType userMode = Database.ActorType.None;

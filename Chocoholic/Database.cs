@@ -18,7 +18,7 @@ public class Database
     }
 
 
-    //All database code here
+    //intialize database
     public void initialize()
     {
         if (!File.Exists(db_file))
@@ -70,7 +70,7 @@ public class Database
         string reportDate = DateTime.Now.ToString("M/d/yyyy");
 
         cmd.CommandText = @"INSERT INTO Reports(provider, member, fee, serviceDate, reportDate) VALUES (" + providerID + ", " + memberID
-            + ", " + fee + ", '" + serviceDate + "', '" + reportDate + "'";
+            + ", " + fee + ", '" + serviceDate + "', '" + reportDate + "')";
         cmd.ExecuteNonQuery();
 
         cmd.CommandText = @"SELECT id FROM Reports ORDER BY id DESC LIMIT 1;";
@@ -108,6 +108,30 @@ public class Database
 
         con.Close();
         return report;
+    }
+
+    //get number of service reports
+    public int serviceReportCount()
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        int count = 0;
+
+        cmd.CommandText = @"SELECT COUNT(*) FROM Reports";
+        cmd.ExecuteNonQuery();
+
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+            count += rdr.GetInt32(0);
+        }
+
+        con.Close();
+        return count;
     }
 
     //get Member Balance
@@ -403,7 +427,7 @@ public class Database
         cmd.ExecuteNonQuery();
         cmd.CommandText = @"CREATE TABLE Managers(id INTEGER PRIMARY KEY)";
         cmd.ExecuteNonQuery();
-        cmd.CommandText = @"CREATE TABLE Reports(id INTEGER PRIMARY KEY, provider INTEGER, member INTEGER, fee INTEGER, serviceDate TEXT, reportDate TEXT";
+        cmd.CommandText = @"CREATE TABLE Reports(id INTEGER PRIMARY KEY, provider INTEGER, member INTEGER, fee INTEGER, serviceDate TEXT, reportDate TEXT)";
         cmd.ExecuteNonQuery();
 
         con.Close();
