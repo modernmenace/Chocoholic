@@ -203,7 +203,7 @@ public class Database
 
     //lookup service code
     //order of return: Service Code, Name, providerID, fee
-    public string lookupService(uint serviceName)
+    public string lookupService(string serviceName)
     {
         string cs = @"URI=" + db_file;
         using var con = new SQLiteConnection(cs);
