@@ -87,12 +87,20 @@ public class Provider
 
                 //find member handles all IO
                 string[] memberInfo = findMemberInfo(commandArray[1].ToLower());
-                //order of return: name, balance, status, address, city, state, zipcode
+                //order of return: name, balance, status, address, city, state, zipcode, id
+
                 if(memberInfo[0] != "")
                     Console.WriteLine("Member " + memberInfo[0] + " Validated");
                 else
                 {
                     Console.WriteLine("Member not validated");
+                    continue;
+                }
+                uint memberID;
+                try { memberID = Int32.Parse(memberInfo[7]); }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Data for Member not complete");
                     continue;
                 }
                 
@@ -111,13 +119,86 @@ public class Provider
                     serviceInfo = findServiceInfo(inputKey);
                     if(serviceInfo[0] != "")
                     {
-                        //provider confirms service and adds comments
+                        //provider confirms service
+                        if(serviceInfo.Length < 4)
+                        {
+                            Console.WriteLine("Service Not Found");
+                            continue;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Service code: " + serviceInfo[0]);
+                            Console.WriteLine("Service name: " + serviceInfo[1]);
+                            Console.WriteLine("Provider ID: " + serviceInfo[2]);
+                            Console.WriteLine("Service fee: " + serviceInfo[3]);
+                            Console.WriteLine("Confirm this is the correct service? (Y/N)");
+                            if(Console.ReadLine().ToLower() == "y")
+                            {
+                                Console.WriteLine("Service confirmed");
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Service not confirmed");
+                                continue;
+                            }
+                        }
                     }
                 }
                 
+                //provider adds comments to service
+                Console.WriteLine("Enter any comments about the service(optional):");
+                string serviceComments = Console.ReadLine();
                 
                 //provider sends request to database to be logged
-                //provider is shown a copy of the data to be saved locally for verification purposes
+                //first display info and ask provider for confimation to send report and log it
+                Console.WriteLine("Service Summary:");
+                Console.WriteLine("Service code: " + serviceInfo[0]);
+                Console.WriteLine("Service name: " + serviceInfo[1]);
+                Console.WriteLine("Provider ID: " + serviceInfo[2]);
+                Console.WriteLine("Service fee: " + serviceInfo[3]);
+                Console.WriteLine("Member ID: " + memberID);
+                Console.WriteLine("Member name: " + memberInfo[0]);
+                Console.WriteLine("Service date: " + serviceDate);
+                Console.WriteLine("Confirm this is the correct service report? (Y/N)");
+                if(Console.ReadLine().ToLower() != "y")
+                {
+                    Console.WriteLine("Service report not comfirmed");
+                    continue;
+                }
+                else
+                {
+                    //push to database
+                    Console.WriteLine("Service report confirmed");
+                    database.createServiceReport(memberID, ID,serviceDate, serviceInfo[3]);
+
+                    //write record to text file for verification
+                    string filename = ID + "_" + serviceDate + "_" + DateTime.Now.ToString("hh:mm tt") + ".txt";
+                    try
+                    {
+                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Users\Public\" + filename, true))
+                        {
+                            //Date and time of record
+                            file.WriteLine(DateTime.Now.ToString("F"));
+                            //service code
+                            file.WriteLine("Service code: " + serviceInfo[0]);
+                            //provider id
+                            file.WriteLine("Provider iD: " + ID);
+                            //service fee
+                            file.WriteLine("Service Fee: " + serviceInfo[3]);
+                            //member id
+                            file.WriteLine("Member ID: " + memberID);
+                            //service date
+                            file.WriteLine("Service Date: " + serviceDate);
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine("Verification file unable to be recorded");
+                        continue;
+                    }
+                    Console.WriteLine("Service record recorded");
+                }
             }
             else
             {
@@ -133,7 +214,7 @@ public class Provider
         set { oID = value; }
     }
 
-    //order of return: name, balance, status, address, city, state, zipcode
+    //order of return: name, balance, status, address, city, state, zipcode, id
     public string[] findMember(string input = "") 
     {
         //returns empty string array on fail
@@ -169,7 +250,7 @@ public class Provider
             }
             else
             {
-                return database.getMember(memberID).Split(',');
+                return database.getMember(memberID).Split(',').Append(input);
             }
         }
     }
