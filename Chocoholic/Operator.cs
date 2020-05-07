@@ -24,7 +24,7 @@ public class Operator
             {
                 if (commandArray.Length < 2)
                 {
-                    Console.WriteLine("Invalid Syntax\nProper Usage: create (member/provider/service)");
+                    Console.WriteLine("Invalid Syntax\nProper Usage: create (member/provider/service/manager)");
                     continue;
                 }
                 if (commandArray[1].ToLower() == "member")
@@ -91,10 +91,11 @@ public class Operator
                         continue;
                     }
                 }
-
+                else if (commandArray[1].ToLower() == "manager")
+                    database.createActor(Database.ActorType.Manager);
                 else
                 {
-                    Console.WriteLine("Invalid Syntax\nProper Usage: create (member/provider/service)");
+                    Console.WriteLine("Invalid Syntax\nProper Usage: create (member/provider/service/manager)");
                     continue;
                 }
             }
@@ -104,7 +105,7 @@ public class Operator
             {
                 if (commandArray.Length < 2)
                 {
-                    Console.WriteLine("Invalid Syntax\nProper Usage: " + commandArray[0] + " (member/provider/service)");
+                    Console.WriteLine("Invalid Syntax\nProper Usage: " + commandArray[0] + " (member/provider/service/manager)");
                     continue;
                 }
 
@@ -169,9 +170,24 @@ public class Operator
 
                     database.deleteService(mId);
                 }
+                else if (commandArray[1].ToLower() == "manager")
+                {
+                    Console.WriteLine("Please enter the manager id:");
+                    uint mId = 0;
+                    try
+                    {
+                        mId = UInt32.Parse(Console.ReadLine());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("ID number is not of valid format");
+                        continue;
+                    }
+                    database.deleteActor(Database.ActorType.Manager, mId);
+                }
                 else
                 {
-                    Console.WriteLine("Invalid Syntax\nProper Usage: " + commandArray[0] + " (member/provider/service)");
+                    Console.WriteLine("Invalid Syntax\nProper Usage: " + commandArray[0] + " (member/provider/service/manager)");
                     continue;
                 }
             }
@@ -329,6 +345,16 @@ public class Operator
                     Console.WriteLine("Invalid Syntax\nProper Usage: update (member/provider) (name/address/city/state/zipcode/status/balance)");
                     continue;
                 }
+            }
+
+            //help command
+            if (commandArray[0].ToLower() == "help")
+            {
+                Console.WriteLine("Available Operator Commands:");
+                Console.WriteLine("create (member/provider/service) -- Starts creation of a new member, provider or service");
+                Console.WriteLine("remove (member/provider/service) -- Starts deletion of a new member, provider or service");
+                Console.WriteLine("update (member/provider) -- Starts the process of updating a member or provider");
+                Console.WriteLine("exit -- Exits the program");
             }
 
             //exit command

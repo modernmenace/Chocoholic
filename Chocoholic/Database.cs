@@ -193,8 +193,15 @@ public class Database
 
         for (int i = 1; i < rdr.FieldCount; i++)
         {
-            report += rdr.GetValue(i);
-            report += ",";
+            try
+            {
+                report += rdr.GetValue(i);
+                report += ",";
+            } catch (Exception e)
+            {
+                con.Close();
+                return "";
+            }
         }
 
         con.Close();
@@ -598,7 +605,7 @@ public class Database
         //Database doesnt exist yet; set up tables etc.
         string cs = @"Data Source=" + db_file;
         using var con = new SQLiteConnection(cs);
-        con.Open();l
+        con.Open();
 
         //Create Tables
         using var cmd = new SQLiteCommand(con);

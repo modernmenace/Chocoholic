@@ -49,6 +49,16 @@ public class Member
         }
     }
 
+    private uint findServiceCode(string s)
+    {
+        return uint.MaxValue;
+    }
+
+    private uint findServiceCost(string s)
+    {
+        return uint.MaxValue;
+    }
+
     public uint ID
     {
         get { return oID; }
