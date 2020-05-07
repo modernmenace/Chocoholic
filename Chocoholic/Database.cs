@@ -211,7 +211,7 @@ public class Database
         using var cmd = new SQLiteCommand(con);
 
         string service = "";
-        cmd.CommandText = @"SELECT * FROM Services WHERE name = " + serviceName;
+        cmd.CommandText = @"SELECT * FROM Services WHERE name = '" + serviceName + "'";
         cmd.ExecuteNonQuery();
 
         using SQLiteDataReader rdr = cmd.ExecuteReader();
