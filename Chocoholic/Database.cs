@@ -598,7 +598,7 @@ public class Database
         //Database doesnt exist yet; set up tables etc.
         string cs = @"Data Source=" + db_file;
         using var con = new SQLiteConnection(cs);
-        con.Open();l
+        con.Open();
 
         //Create Tables
         using var cmd = new SQLiteCommand(con);

@@ -45,7 +45,7 @@ public class Provider
                         commandArray.Append("");
                     
                     string[] memberInfo = findMemberInfo(commandArray[2].ToLower());
-                    if(member[0] == "")
+                    if(memberInfo[0] == "")
                         Console.WriteLine("Member not found");
                     else
                         Console.WriteLine("Member Validated");
@@ -134,7 +134,7 @@ public class Provider
     }
 
     //order of return: name, balance, status, address, city, state, zipcode
-    public string[] findMember(string input = "") 
+    public string[] findMemberInfo(string input = "") 
     {
         //returns empty string array on fail
         
@@ -151,7 +151,7 @@ public class Provider
         }
 
         uint memberID = 0;
-        try { memberID = Int32.Parse(input); }
+        try { memberID = UInt32.Parse(input); }
         catch (Exception e)
         {
             Console.WriteLine("ID entered is not a number");
@@ -172,6 +172,8 @@ public class Provider
                 return database.getMember(memberID).Split(',');
             }
         }
+        string[] defaultS = new string[2];
+        return defaultS;
     }
 
     //order of return: Service Code, Name, providerID, fee
