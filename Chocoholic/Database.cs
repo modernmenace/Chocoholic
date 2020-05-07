@@ -203,7 +203,7 @@ public class Database
 
     //lookup service code
     //order of return: Service Code, Name, providerID, fee
-    public string lookupService(uint id)
+    public string lookupService(uint serviceName)
     {
         string cs = @"URI=" + db_file;
         using var con = new SQLiteConnection(cs);
@@ -211,7 +211,7 @@ public class Database
         using var cmd = new SQLiteCommand(con);
 
         string service = "";
-        cmd.CommandText = @"SELECT * FROM Services WHERE id = " + id;
+        cmd.CommandText = @"SELECT * FROM Services WHERE name = " + serviceName;
         cmd.ExecuteNonQuery();
 
         using SQLiteDataReader rdr = cmd.ExecuteReader();
@@ -598,7 +598,7 @@ public class Database
         //Database doesnt exist yet; set up tables etc.
         string cs = @"Data Source=" + db_file;
         using var con = new SQLiteConnection(cs);
-        con.Open();
+        con.Open();l
 
         //Create Tables
         using var cmd = new SQLiteCommand(con);
