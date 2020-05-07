@@ -331,6 +331,16 @@ public class Operator
                 }
             }
 
+            //help command
+            if (commandArray[0].ToLower() == "help")
+            {
+                Console.WriteLine("Available Operator Commands:");
+                Console.WriteLine("create (member/provider/service) -- Starts creation of a new member, provider or service");
+                Console.WriteLine("remove (member/provider/service) -- Starts deletion of a new member, provider or service");
+                Console.WriteLine("update (member/provider) -- Starts the process of updating a member or provider");
+                Console.WriteLine("exit -- Exits the program");
+            }
+
             //exit command
             if (command.ToLower().Contains("exit"))
             {

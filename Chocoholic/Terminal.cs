@@ -22,30 +22,53 @@ public class Terminal
         }
 
         //get user id (trusting user that ID exists for now)
-        Console.WriteLine("Please Enter ID Number:");
-        uint id = UInt32.MaxValue;
-        while (id == UInt32.MaxValue)
-            try { id = UInt32.Parse(Console.ReadLine()); } catch (FormatException e) { Console.WriteLine("Invalid ID, Please Try Again"); }
-        Console.WriteLine("Success! Ready for Input!\n");
-
-        if (userMode == Database.ActorType.Member)
-            memberTerminal(id);
-        else if (userMode == Database.ActorType.Provider)
-            providerTerminal(id);
-        else if (userMode == Database.ActorType.Operator)
+        while (true)
         {
-            if (!database.actorExists(id, Database.ActorType.Operator))
-            {
-                Console.WriteLine("Operator not found with id '" + id + "'!");
-                run(db);
-            }
-            Operator op = new Operator(id, database);
-            op.terminal();
-        }
-        else if (userMode == Database.ActorType.Manager)
-            managerTerminal(id);
+            Console.WriteLine("Please Enter ID Number:");
+            uint id = UInt32.MaxValue;
+            try { id = UInt32.Parse(Console.ReadLine()); } catch (FormatException e) { Console.WriteLine("Invalid ID, Please Try Again"); continue; }
 
-        Console.WriteLine(id);
+            if (userMode == Database.ActorType.Member)
+            {
+                if (!database.actorExists(id, Database.ActorType.Member))
+                {
+                    Console.WriteLine("Member not found with id '" + id + "'!");
+                    run(db);
+                }
+                Member op = new Member(id, database);
+                op.terminal();
+            }
+            else if (userMode == Database.ActorType.Provider)
+            {
+                if (!database.actorExists(id, Database.ActorType.Provider))
+                {
+                    Console.WriteLine("Provider not found with id '" + id + "'!");
+                    run(db);
+                }
+                Provider op = new Provider(id, database);
+                op.terminal();
+            }
+            else if (userMode == Database.ActorType.Operator)
+            {
+                if (!database.actorExists(id, Database.ActorType.Operator))
+                {
+                    Console.WriteLine("Operator not found with id '" + id + "'!");
+                    run(db);
+                }
+                Operator op = new Operator(id, database);
+                op.terminal();
+            }
+            else if (userMode == Database.ActorType.Manager)
+            {
+                if (!database.actorExists(id, Database.ActorType.Manager))
+                {
+                    Console.WriteLine("Manager not found with id '" + id + "'!");
+                    run(db);
+                }
+                Manager op = new Manager(id, database);
+                op.terminal();
+            }
+        }
     }
 
     //TODO: Implement Member Functionality
