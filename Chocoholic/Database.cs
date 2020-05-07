@@ -101,13 +101,66 @@ public class Database
 
         using SQLiteDataReader rdr = cmd.ExecuteReader();
 
-        while (rdr.Read())
+        for (int i = 1; i < rdr.FieldCount; i++)
         {
-            report += rdr.GetString(0);
+            report += rdr.GetValue(i);
+            report += ",";
         }
 
         con.Close();
         return report;
+    }
+
+    //get provider info by id
+    public string getProvider(uint id)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        string provider = "";
+
+        cmd.CommandText = @"Select * FROM Providers WHERE id = " + id;
+        cmd.ExecuteNonQuery();
+
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+            for (int i = 1; i < rdr.FieldCount; i++)
+            {
+                provider += rdr.GetValue(i);
+                provider += ",";
+            }
+        }
+
+        con.Close();
+        return provider;
+    }
+
+    //get number of providers
+    public int providerCount()
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        int count = 0;
+
+        cmd.CommandText = @"SELECT COUNT(*) FROM Providers";
+        cmd.ExecuteNonQuery();
+
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+            count += rdr.GetInt32(0);
+        }
+
+        con.Close();
+        return count;
     }
 
     //get number of service reports

@@ -59,7 +59,7 @@ public class Terminal
     }
 
     //TODO: Implement Provider Functionality
-    //createServiceReport, getMemberBalance functions available in database
+    //createServiceReport, getMemberBalance, getProvider, providerCount, actorExists functions available in database
     private void providerTerminal(uint id)
     {
         while (true)
@@ -75,7 +75,7 @@ public class Terminal
     }
 
     //TODO: Implement Manager Functionality
-    //getServiceReport function available in database
+    //getServiceReport, serviceReportCount functions available in database
     private void managerTerminal(uint id)
     {
         while (true)
