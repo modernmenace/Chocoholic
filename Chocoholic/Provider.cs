@@ -31,9 +31,9 @@ public class Provider
                 //finds either member or service
                 //prints if member is valid or service code and cost
                 
-                if(commandArray.Length < 2)
+                if(commandArray.Length < 3)
                 {
-                    Console.WriteLine("Invalid Syntax\nProper Usage: find (member/service)");
+                    Console.WriteLine("Invalid Syntax\nProper Usage: find (member/service) ('id')");
                     continue;
                 }
 
@@ -45,7 +45,8 @@ public class Provider
                         commandArray.Append("");
                     
                     string[] memberInfo = findMemberInfo(commandArray[2].ToLower());
-                    if(memberInfo[0] == "")
+                    Console.WriteLine(memberInfo[0]);
+                    if (memberInfo[0] == "")
                         Console.WriteLine("Member not found");
                     else
                         Console.WriteLine("Member Validated");
@@ -172,7 +173,8 @@ public class Provider
                 return database.getMember(memberID).Split(',');
             }
         }
-        string[] defaultS = new string[2];
+        string[] defaultS = new string[1];
+        defaultS[0] = "";
         return defaultS;
     }
 
