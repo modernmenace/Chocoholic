@@ -59,6 +59,96 @@ public class Database
         return false;
     }
 
+    //create service
+    public void createService(uint serviceCode, string name, uint providerID, int fee)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        cmd.CommandText = @"INSERT INTO Services(code, name, providerID, fee) VALUES (" + serviceCode + ", '" + name + "', "
+            + providerID + ", " + fee + ")";
+        cmd.ExecuteNonQuery();
+
+        con.Close();
+    }
+
+    public int getMemberStatus(uint id)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        cmd.CommandText = "SELECT status FROM Members WHERE id = " + id;
+        cmd.ExecuteNonQuery();
+
+        int status = -1;
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+            status = rdr.GetInt32(0);
+        }
+
+        con.Close();
+        return status;
+    }
+
+    //get member info by id
+    public string getMember(uint id)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        string member = "";
+
+        cmd.CommandText = @"Select * FROM Members WHERE id = " + id;
+        cmd.ExecuteNonQuery();
+
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+            for (int i = 1; i < rdr.FieldCount; i++)
+            {
+                member += rdr.GetValue(i);
+                member += ",";
+            }
+        }
+
+        con.Close();
+        return member;
+    }
+
+    //get number of members
+    public int memberCount()
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        int count = 0;
+
+        cmd.CommandText = @"SELECT COUNT(*) FROM Members";
+        cmd.ExecuteNonQuery();
+
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+            count += rdr.GetInt32(0);
+        }
+
+        con.Close();
+        return count;
+    }
+
+
     //create service report
     public void createServiceReport(uint memberID, uint providerID, string serviceDate, int fee)
     {
@@ -481,6 +571,8 @@ public class Database
         cmd.CommandText = @"CREATE TABLE Managers(id INTEGER PRIMARY KEY)";
         cmd.ExecuteNonQuery();
         cmd.CommandText = @"CREATE TABLE Reports(id INTEGER PRIMARY KEY, provider INTEGER, member INTEGER, fee INTEGER, serviceDate TEXT, reportDate TEXT)";
+        cmd.ExecuteNonQuery();
+        cmd.CommandText = @"CREATE TABLE Services(id INTEGER PRIMARY KEY, code INTEGER, name TEXT, providerID INTEGER, fee INTEGER)";
         cmd.ExecuteNonQuery();
 
         con.Close();
