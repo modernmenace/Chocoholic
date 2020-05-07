@@ -34,6 +34,11 @@ public class Terminal
             providerTerminal(id);
         else if (userMode == Database.ActorType.Operator)
         {
+            if (!database.actorExists(id, Database.ActorType.Operator))
+            {
+                Console.WriteLine("Operator not found with id '" + id + "'!");
+                run(db);
+            }
             Operator op = new Operator(id, database);
             op.terminal();
         }
