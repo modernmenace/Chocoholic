@@ -83,11 +83,15 @@ public class Provider
             {
                 //Bill Service
                 //provider enters member id (record and validate)
-                if(commandArray.Length<3)
-                    commandArray.Append("");
+                if(commandArray.Length<2)
+                {
+                    Console.WriteLine("Invalid Syntax\nbill ('member ID')");
+                    continue;
+                }
 
                 //find member handles all IO
                 string[] memberInfo = findMemberInfo(commandArray[1].ToLower());
+                Console.WriteLine(memberInfo[0]);
                 //order of return: name, balance, status, address, city, state, zipcode, id
 
                 if(memberInfo[0] != "")
@@ -97,14 +101,8 @@ public class Provider
                     Console.WriteLine("Member not validated");
                     continue;
                 }
-                uint memberID;
-                try { memberID = Int32.Parse(memberInfo[7]); }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Data for Member not complete");
-                    continue;
-                }
-                
+                uint memberID = UInt32.Parse(commandArray[1].ToLower());
+
                 //provider enters date of service (no validation)
                 Console.WriteLine("Enter date of service: ");
                 string serviceDate = Console.ReadLine();
@@ -172,7 +170,14 @@ public class Provider
                 {
                     //push to database
                     Console.WriteLine("Service report confirmed");
-                    database.createServiceReport(memberID, ID,serviceDate, serviceInfo[3]);
+                    int fee = 0;
+                    try { fee = Int32.Parse(serviceInfo[3]); }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Fee is not an integer value!");
+                        continue;
+                    }
+                    database.createServiceReport(memberID, ID,serviceDate, fee);
 
                     //write record to text file for verification
                     string filename = ID + "_" + serviceDate + "_" + DateTime.Now.ToString("hh:mm tt") + ".txt";
@@ -219,7 +224,7 @@ public class Provider
     }
 
     //order of return: name, balance, status, address, city, state, zipcode, id
-    public string[] findMember(string input = "") 
+    public string[] findMemberInfo(string input = "") 
     {
         //returns empty string array on fail
         
@@ -254,7 +259,9 @@ public class Provider
             }
             else
             {
-                return database.getMember(memberID).Split(',').Append(input);
+                var a = database.getMember(memberID).Split(',');
+                a.Append(input);
+                return a;
             }
         }
         string[] defaultS = new string[1];
