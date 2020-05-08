@@ -208,6 +208,39 @@ public class Database
         return report;
     }
 
+    //get service
+    public string getServiceName(uint id)
+    {
+        string cs = @"URI=" + db_file;
+        using var con = new SQLiteConnection(cs);
+        con.Open();
+        using var cmd = new SQLiteCommand(con);
+
+        string report = "";
+
+        cmd.CommandText = @"Select * FROM Services WHERE code = " + id;
+        cmd.ExecuteNonQuery();
+
+        using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+        for (int i = 1; i < rdr.FieldCount; i++)
+        {
+            try
+            {
+                report += rdr.GetValue(i);
+                report += ",";
+            }
+            catch (Exception e)
+            {
+                con.Close();
+                return "";
+            }
+        }
+
+        con.Close();
+        return report;
+    }
+
     //lookup service code
     //order of return: Service Code, Name, providerID, fee
     public string lookupService(string serviceName)

@@ -24,22 +24,27 @@ public class Member
                 System.Environment.Exit(0);
             }
             else if(commandArray[0].ToLower() == "service")
-            {   
-                 if(commandArray.Length<3)
-                 {
-                     Console.WriteLine("Enter service keyword:");
-                     commandArray.Append(Console.ReadLine().ToLower());
-                 }
+            {
+                //look up service code
+                if (commandArray.Length < 2)
+                    commandArray.Append("Invalid syntax");
 
-                 uint code = findServiceCode(commandArray[2]);
-                 if(code == uint.MaxValue)
-                 {
-                     Console.WriteLine("Service not found, try again.");
-                     continue;
-                 }
+                string[] serviceInfo = findServiceInfo(commandArray[1].ToLower());
+                //order of return: Service Code, Name, providerID, fee
 
-                 uint cost = findServiceCost(commandArray[2]);
-                 Console.WriteLine("Service cost (" + commandArray[2] + "): " + cost);
+                if (serviceInfo[0] == "" || serviceInfo.Length < 4)
+                {
+                    Console.WriteLine("Service Not Found");
+                    continue;
+                }
+                else
+                {
+                    Console.WriteLine("Service code: " + serviceInfo[0]);
+                    Console.WriteLine("Service name: " + serviceInfo[1]);
+                    Console.WriteLine("Provider ID: " + serviceInfo[2]);
+                    Console.WriteLine("Service fee: " + serviceInfo[3]);
+                }
+
             }
             else
             {
@@ -49,14 +54,21 @@ public class Member
         }
     }
 
-    private uint findServiceCode(string s)
+    //order of return: Service Code, Name, providerID, fee
+    public string[] findServiceInfo(string input = "")
     {
-        return uint.MaxValue;
-    }
+        //return empty string array if not found
 
-    private uint findServiceCost(string s)
-    {
-        return uint.MaxValue;
+
+        //look up service code
+        if (input == "")
+        {
+            //prompt user for service keyword
+            Console.WriteLine("Enter service keyword:");
+            input = Console.ReadLine();
+        }
+
+        return database.lookupService(input).Split(',');
     }
 
     public uint ID
