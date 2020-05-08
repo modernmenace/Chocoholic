@@ -161,6 +161,7 @@ public class Provider
                 Console.WriteLine("Member ID: " + memberID);
                 Console.WriteLine("Member name: " + memberInfo[0]);
                 Console.WriteLine("Service date: " + serviceDate);
+                Console.WriteLine("Comments: " + serviceComments);
                 Console.WriteLine("Confirm this is the correct service report? (Y/N)");
                 if(Console.ReadLine().ToLower() != "y")
                 {
@@ -191,6 +192,8 @@ public class Provider
                             file.WriteLine("Member ID: " + memberID);
                             //service date
                             file.WriteLine("Service Date: " + serviceDate);
+                            //service comments
+                            file.WriteLine("Comments:" + serviceComments);
                         }
                     }
                     catch(Exception e)
